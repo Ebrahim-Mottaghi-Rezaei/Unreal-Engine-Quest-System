@@ -17,8 +17,9 @@ void UInventoryComponent::AddToInventory(TSubclassOf<UQuestItemBase> Item, int C
 	const auto FoundItem = Inventory.Find( Id );
 	if ( FoundItem == nullptr ) {
 		Inventory.Add( Id, Count );
-		Notify_ItemAdded(Item);
+		Notify_ItemAdded( Item );
 	} else {
 		*FoundItem += Count;
+		Notify_ItemUpdated( Item, *FoundItem );
 	}
 }

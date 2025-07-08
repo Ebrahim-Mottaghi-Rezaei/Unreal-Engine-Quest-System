@@ -16,11 +16,12 @@ void UQuestComponent::AddQuest(TSubclassOf<UQuest> Quest) {
 	const auto Id = Quest.GetDefaultObject()->GetId();
 	if ( !ActiveQuests.Contains( Id ) ) {
 		const auto NewQuest = NewObject<UQuest>( GetOwner(), Quest );
-
-		NewQuest->UpdateStatus( EQuestStatus::Active );
 		ActiveQuests.Add( Id, NewQuest );
 
 		Notify_QuestAdded( NewQuest );
+
+		NewQuest->UpdateStatus( EQuestStatus::Active );
+		Notify_QuestStatusChanged( NewQuest, EQuestStatus::Active );
 	}
 }
 
@@ -32,6 +33,9 @@ void UQuestComponent::UpdateQuestStatus(const TSubclassOf<UQuest> Quest, const E
 		UE_LOG( LogTemp, Warning, TEXT( "Quest not found" ) );
 		return;
 	}
+
+	if ( FoundQuest->Status == EQuestStatus::Failed || FoundQuest->Status == EQuestStatus::Completed )
+		return;
 
 	FoundQuest->UpdateStatus( Status );
 
