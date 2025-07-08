@@ -20,10 +20,10 @@ public:
 protected:
 	UFUNCTION( BlueprintImplementableEvent, Category = "Events", DisplayName="ItemAdded" )
 	// ReSharper disable once CppUEBlueprintImplementableEventNotImplemented
-	void K2_ItemAdded(TSubclassOf<UQuest> Item);
+	void K2_ItemAdded(UGameplayItemData* Item);
 
 	UFUNCTION( BlueprintCallable )
-	FORCEINLINE void Notify_ItemAdded(TSubclassOf<UQuest> Item) {
+	FORCEINLINE void Notify_ItemAdded(UGameplayItemData* Item) {
 		OnItemAdded.Broadcast( Item );
 		K2_ItemAdded( Item );
 	}
@@ -38,10 +38,10 @@ public:
 protected:
 	UFUNCTION( BlueprintImplementableEvent, Category = "Events", DisplayName="ItemUpdated" )
 	// ReSharper disable once CppUEBlueprintImplementableEventNotImplemented
-	void K2_ItemUpdated(TSubclassOf<UQuest> Item, uint8 Count);
+	void K2_ItemUpdated(UGameplayItemData* Item, uint8 Count);
 
 	UFUNCTION( BlueprintCallable )
-	FORCEINLINE void Notify_ItemUpdated(TSubclassOf<UQuest> Item, uint8 Count) {
+	FORCEINLINE void Notify_ItemUpdated(UGameplayItemData* Item, uint8 Count) {
 		OnItemUpdated.Broadcast( Item, Count );
 		K2_ItemUpdated( Item, Count );
 	}

@@ -9,7 +9,7 @@ UInventoryComponent::UInventoryComponent() {
 }
 
 void UInventoryComponent::AddToInventory(UGameplayItemData* Item, int Count) {
-	/*const auto Id        = Item->GetDefaultObject<UQuestItemBase>()->GetId();
+	const auto Id        = Item->GetId();
 	const auto FoundItem = Inventory.Find( Id );
 	if ( FoundItem == nullptr ) {
 		Inventory.Add( Id, Count );
@@ -17,7 +17,7 @@ void UInventoryComponent::AddToInventory(UGameplayItemData* Item, int Count) {
 	} else {
 		*FoundItem += Count;
 		Notify_ItemUpdated( Item, *FoundItem );
-	}*/
+	}
 }
 
 uint8 UInventoryComponent::GetItemCount(UGameplayItemData* Item) const {

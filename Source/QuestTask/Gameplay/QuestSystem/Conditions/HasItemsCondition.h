@@ -9,7 +9,7 @@
 struct FHasItemsConditionInfo;
 class UGameplayItemData;
 
-UCLASS()
+UCLASS( BlueprintType )
 class QUESTTASK_API UHasItemsCondition : public UQuestCondition {
 	GENERATED_BODY()
 
@@ -19,6 +19,11 @@ public:
 protected:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	TArray<FHasItemsConditionInfo> RequiredItems;
+
+public:
+	FORCEINLINE TArray<FHasItemsConditionInfo> GetRequiredItems() const {
+		return RequiredItems;
+	}
 
 	virtual bool Evaluate_Implementation() override;
 };

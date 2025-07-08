@@ -8,6 +8,7 @@
 #include "QuestTask/DataTypes/Enums.h"
 #include "Quest.generated.h"
 
+class UInventoryComponent;
 class UQuestCondition;
 
 UCLASS( Abstract, Blueprintable, EditInlineNew )
@@ -59,6 +60,8 @@ protected:
 
 	UQuestComponent* GetQuestComponent() const;
 
+	UInventoryComponent* GetInventoryComponent() const;
+
 public:
 	FORCEINLINE FGuid GetId() const {
 		return Id;
@@ -77,7 +80,7 @@ public:
 	}
 
 	UFUNCTION( BlueprintCallable, Category = "Quest" )
-	void UpdateStatus(EQuestStatus NewStatus);
+	virtual void UpdateStatus(EQuestStatus NewStatus);
 
 protected:
 	UFUNCTION()
@@ -89,6 +92,6 @@ protected:
 	virtual void PostDuplicate(bool bDuplicateForPIE) override;
 #endif
 
-	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
+	UPROPERTY()
 	TSoftObjectPtr<UQuestComponent> QuestComponent;
 };

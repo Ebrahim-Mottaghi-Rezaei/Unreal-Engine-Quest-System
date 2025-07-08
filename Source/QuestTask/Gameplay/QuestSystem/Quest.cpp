@@ -15,7 +15,8 @@ UQuest::UQuest() {
 	GameplayText = FText::FromString( TEXT( "Gameplay" ) );
 	Icon         = nullptr;
 
-	Condition = nullptr;
+	QuestComponent = nullptr;
+	Condition      = nullptr;
 }
 
 UQuest::~UQuest() {
@@ -33,7 +34,7 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 		return;
 
 	if ( IsValid( Condition ) )
-		if ( Status == EQuestStatus::Active ) {
+		if ( NewStatus == EQuestStatus::Active ) {
 			if ( Condition->Evaluate_Implementation() ) {
 				Notify_StatusChanged( EQuestStatus::Completed );
 				return;
@@ -70,6 +71,22 @@ UQuestComponent* UQuest::GetQuestComponent() const {
 	}
 
 	return IQuestInterface::Execute_GetQuestComponent( PlayerController );
+}
+
+UInventoryComponent* UQuest::GetInventoryComponent() const {
+	const auto World = GetWorld();
+	if ( !IsValid( World ) ) {
+		UE_LOG( LogTemp, Warning, TEXT( "World is null" ) );
+		return nullptr;
+	}
+
+	const auto PlayerController = UGameplayStatics::GetPlayerController( World, 0 );
+	if ( !PlayerController ) {
+		UE_LOG( LogTemp, Warning, TEXT( "PlayerController is null" ) );
+		return nullptr;
+	}
+
+	return IQuestInterface::Execute_GetInventoryComponent( PlayerController );
 }
 
 #if WITH_EDITOR
