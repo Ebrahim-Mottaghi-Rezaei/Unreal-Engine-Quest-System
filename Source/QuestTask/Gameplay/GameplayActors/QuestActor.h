@@ -16,8 +16,8 @@ public:
 	AQuestActor();
 
 protected:
-	UPROPERTY( BlueprintReadOnly, EditAnywhere, Instanced, meta=(editinlinenew) )
-	UQuest* Quest;
+	UPROPERTY( BlueprintReadOnly, EditAnywhere )
+	TSubclassOf<UQuest> Quest;
 
 	virtual void BeginPlay() override;
 };
