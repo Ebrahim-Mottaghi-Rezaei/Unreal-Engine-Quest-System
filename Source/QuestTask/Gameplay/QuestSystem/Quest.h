@@ -3,16 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QuestItemBase.h"
+#include "QuestTask/Components/QuestComponent.h"
 #include "QuestTask/DataTypes/Delegates.h"
 #include "QuestTask/DataTypes/Enums.h"
 #include "QuestTask/DataTypes/Structs.h"
-#include "UObject/Object.h"
 #include "Quest.generated.h"
 
-class UQuestAsset;
-
 UCLASS( Abstract, Blueprintable, EditInlineNew )
-class QUESTTASK_API UQuest : public UObject {
+class QUESTTASK_API UQuest : public UQuestItemBase {
 	GENERATED_BODY()
 
 public:
@@ -36,23 +35,24 @@ public:
 
 	UQuest();
 
-	UPROPERTY( BlueprintReadOnly, EditDefaultsOnly )
-	FQuestInfo Info;
+	virtual ~UQuest() override;
 
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
 	EQuestStatus Status;
 
+	UPROPERTY( BlueprintReadWrite, EditAnywhere, meta=(editinlinenew, ShowInnerProperties, FullyExpand=true) )
+	TArray<FQuestCondition> CompleteConditions;
+
 	UFUNCTION( BlueprintCallable, Category = "Quest" )
 	void UpdateStatus(EQuestStatus NewStatus);
 
-	UFUNCTION( BlueprintImplementableEvent, Category = "Quest" )
-	void OnQuestActivated(EQuestStatus NewStatus);
+protected:
+	UFUNCTION()
+	void OnQuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus);
 
-	UFUNCTION( BlueprintImplementableEvent, Category = "Quest" )
-	void OnQuestCompleted(EQuestStatus NewStatus);
+	UQuestComponent* RetrieveQuestComponent() const;
 
-	UFUNCTION( BlueprintImplementableEvent, Category = "Quest" )
-	void OnQuestFailed(EQuestStatus NewStatus);
+	bool CheckIfConditionsMeet();
 
 	virtual UWorld* GetWorld() const override;
 };

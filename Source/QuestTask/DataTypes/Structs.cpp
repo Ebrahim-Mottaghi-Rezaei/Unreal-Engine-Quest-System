@@ -8,4 +8,13 @@ FString FBaseStruct::ToString() {
 	return TEXT( "BaseStruct" );
 }
 
-FQuestInfo::FQuestInfo() {}
+FQuestInfo::FQuestInfo() {
+	Id          = FGuid::NewGuid();
+	Name        = FText::FromString( "Name" );
+	Description = FText::FromString( "Description" );
+}
+
+FQuestCondition::FQuestCondition() {
+	Item  = nullptr;
+	Count = 1;
+}

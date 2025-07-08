@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enums.h"
 #include "UObject/Object.h"
 #include "Structs.generated.h"
+
+class UQuestItemBase;
 
 USTRUCT( BlueprintType, Category = "DataTypes" )
 struct QUESTTASK_API FBaseStruct {
@@ -26,11 +29,24 @@ public:
 	FQuestInfo();
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
-	int Id = 0;
+	FGuid Id;
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	FText Name;
 
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	FText Description;
+};
+
+USTRUCT( BlueprintType, Category = "DataTypes" )
+struct QUESTTASK_API FQuestCondition : public FBaseStruct {
+	GENERATED_BODY()
+
+public:
+	FQuestCondition();
+
+	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	TSubclassOf<UQuestItemBase> Item;
+	UPROPERTY( BlueprintReadWrite, EditAnywhere )
+	uint8 Count;
 };

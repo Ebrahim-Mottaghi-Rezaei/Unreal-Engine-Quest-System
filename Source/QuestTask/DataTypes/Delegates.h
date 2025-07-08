@@ -12,4 +12,10 @@ class QUESTTASK_API UDummy : public UObject {
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FQuestAddedDelegate, UQuest*, Quest );
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FQuestStatusUpdatedDelegate, UQuest*, Quest, EQuestStatus, NewStatus );
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FQuestStatusChangedDelegate, EQuestStatus, NewStatus );
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FInventoryItemAddedDelegate, TSubclassOf<UQuestItemBase>, Item );
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FInventoryItemUpdatedDelegate, TSubclassOf<UQuestItemBase>, Item, uint8, Count );

@@ -14,7 +14,3 @@ enum class EQuestTriggerVolumeAction : uint8 {
 	Add, Update
 };
 
-UENUM( BlueprintType )
-enum class EQuestCondition : uint8 {
-	And, Or
-};

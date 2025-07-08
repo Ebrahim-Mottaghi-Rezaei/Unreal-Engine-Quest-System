@@ -13,23 +13,35 @@ void UQuestComponent::BeginPlay() {
 }
 
 void UQuestComponent::AddQuest(TSubclassOf<UQuest> Quest) {
-	if ( !ActiveQuests.Contains( Quest.GetDefaultObject()->Info.Id ) ) {
+	const auto Id = Quest.GetDefaultObject()->GetId();
+	if ( !ActiveQuests.Contains( Id ) ) {
 		const auto NewQuest = NewObject<UQuest>( GetOwner(), Quest );
 
 		NewQuest->UpdateStatus( EQuestStatus::Active );
-		ActiveQuests.Add( NewQuest->Info.Id, NewQuest );
+		ActiveQuests.Add( Id, NewQuest );
 
 		Notify_QuestAdded( NewQuest );
 	}
 }
 
-void UQuestComponent::UpdateQuestStatus(TSubclassOf<UQuest> Quest, EQuestStatus Status) {
-	const auto FoundQuest = ActiveQuests.FindRef( Quest.GetDefaultObject()->Info.Id );
-	if ( FoundQuest == nullptr )
+void UQuestComponent::UpdateQuestStatus(const TSubclassOf<UQuest> Quest, const EQuestStatus Status) {
+	const auto Id         = Quest.GetDefaultObject()->GetId();
+	const auto FoundQuest = ActiveQuests.FindRef( Id );
+
+	if ( FoundQuest == nullptr ) {
+		UE_LOG( LogTemp, Warning, TEXT( "Quest not found" ) );
 		return;
+	}
 
 	FoundQuest->UpdateStatus( Status );
 
-	if ( Status == EQuestStatus::Completed || Status == EQuestStatus::Failed )
-		ActiveQuests.Remove( FoundQuest->Info.Id );
+	Notify_QuestStatusChanged( FoundQuest, Status );
+}
+
+EQuestStatus UQuestComponent::GetQuestStatus(const FGuid& QuestId) const {
+	const auto FoundQuest = ActiveQuests.FindRef( QuestId );
+	if ( FoundQuest == nullptr )
+		return EQuestStatus::NotStarted;
+
+	return FoundQuest->Status;
 }

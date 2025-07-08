@@ -21,8 +21,13 @@ void AQuestTriggerBox::BeginPlay() {
 void AQuestTriggerBox::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap( OtherActor );
 
-	if ( !OtherActor ) {
+	if ( !IsValid( OtherActor ) ) {
 		UE_LOG( LogTemp, Warning, TEXT( "OtherActor is null" ) );
+		return;
+	}
+
+	if ( !IsValid( Quest ) ) {
+		UE_LOG( LogTemp, Warning, TEXT( "Quest is null" ) );
 		return;
 	}
 

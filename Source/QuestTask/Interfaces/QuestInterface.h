@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "QuestInterface.generated.h"
 
+class UInventoryComponent;
 class UQuestComponent;
 
 UINTERFACE()
@@ -17,6 +18,9 @@ class QUESTTASK_API IQuestInterface {
 	GENERATED_BODY()
 
 public:
+	UFUNCTION( BlueprintCallable, BlueprintNativeEvent, Category="Quest Interface" )
+	UInventoryComponent* GetInventoryComponent();
+
 	UFUNCTION( BlueprintCallable, BlueprintNativeEvent, Category="Quest Interface" )
 	UQuestComponent* GetQuestComponent();
 };
