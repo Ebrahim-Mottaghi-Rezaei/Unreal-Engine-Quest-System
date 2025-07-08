@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GameplayItem.generated.h"
 
+class UGameplayItemData;
 class UQuestItemBase;
 
 UCLASS()
@@ -16,7 +17,6 @@ public:
 	AGameplayItem();
 
 protected:
-	UPROPERTY( BlueprintReadOnly, EditAnywhere, Instanced, meta=(editinlinenew) )
-	UQuestItemBase* Item;
-
+	UPROPERTY( BlueprintReadOnly, EditAnywhere )
+	UGameplayItemData* Item;
 };

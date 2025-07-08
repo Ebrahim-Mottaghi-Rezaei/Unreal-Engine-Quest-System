@@ -1,12 +1,21 @@
 ﻿// Copyright Ebrahim Mottaghi Rezaei [https://www.linkedin.com/in/ebrahim-mr/]. All Rights Reserved
 
 #include "Quest.h"
+
+#include "Conditions/QuestCondition.h"
 #include "Kismet/GameplayStatics.h"
 #include "QuestTask/Components/QuestComponent.h"
 #include "QuestTask/Gameplay/QuestSystem/Interfaces/QuestInterface.h"
 
 UQuest::UQuest() {
 	Status = EQuestStatus::NotStarted;
+
+	Id           = FGuid::NewGuid();
+	Name         = FText::FromString( TEXT( "Name" ) );
+	GameplayText = FText::FromString( TEXT( "Gameplay" ) );
+	Icon         = nullptr;
+
+	Condition = nullptr;
 }
 
 UQuest::~UQuest() {
@@ -23,28 +32,31 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 	if ( Status == NewStatus )
 		return;
 
-	if ( Status == EQuestStatus::Active ) {
-		if ( CheckIfConditionsMeet() ) {
-			Notify_StatusChanged( EQuestStatus::Completed );
+	if ( IsValid( Condition ) )
+		if ( Status == EQuestStatus::Active ) {
+			if ( Condition->Evaluate_Implementation() ) {
+				Notify_StatusChanged( EQuestStatus::Completed );
+				return;
+			}
 
-			return;
+			if ( !QuestComponent.IsValid() )
+				QuestComponent = GetQuestComponent();
+
+			QuestComponent->OnQuestStatusChanged.AddDynamic( this, &ThisClass::OnQuestStatusChanged );
 		}
-
-		if ( !QuestComponent.IsValid() )
-			QuestComponent = RetrieveQuestComponent();
-
-		QuestComponent->OnQuestStatusChanged.AddDynamic( this, &ThisClass::OnQuestStatusChanged );
-	}
 
 	Status = NewStatus;
 	Notify_StatusChanged( Status );
 }
 
 void UQuest::OnQuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus) {
-	CheckIfConditionsMeet();
+	if ( NewStatus == EQuestStatus::Failed )
+		UpdateStatus( EQuestStatus::Failed );
+	else if ( Condition->Evaluate_Implementation() )
+		UpdateStatus( EQuestStatus::Completed );
 }
 
-UQuestComponent* UQuest::RetrieveQuestComponent() const {
+UQuestComponent* UQuest::GetQuestComponent() const {
 	const auto World = GetWorld();
 	if ( !IsValid( World ) ) {
 		UE_LOG( LogTemp, Warning, TEXT( "World is null" ) );
@@ -60,32 +72,14 @@ UQuestComponent* UQuest::RetrieveQuestComponent() const {
 	return IQuestInterface::Execute_GetQuestComponent( PlayerController );
 }
 
-bool UQuest::CheckIfConditionsMeet() {
-	if ( !QuestComponent.IsValid() )
-		QuestComponent = RetrieveQuestComponent();
+#if WITH_EDITOR
+void UQuest::PostDuplicate(bool bDuplicateForPIE) {
+	UObject::PostDuplicate( bDuplicateForPIE );
 
-	if ( QuestComponent.IsValid() )
-		return false;
-
-	if ( CompleteConditions.Num() == 0 )
-		return false;
-
-	for ( const auto Condition : CompleteConditions ) {
-		if ( Condition.Item == nullptr ) {
-			continue;
-		}
-		const auto ItemId = Condition.Item.GetDefaultObject()->GetId();
-
-		if ( QuestComponent->GetQuestStatus( ItemId ) == EQuestStatus::Failed ) {
-			UpdateStatus( EQuestStatus::Failed );
-			return false;
-		}
-
-		if ( QuestComponent->GetQuestStatus( ItemId ) != EQuestStatus::Completed )
-			return false;
-	}
-	return true;
+	Id = FGuid::NewGuid();
 }
+
+#endif
 
 UWorld* UQuest::GetWorld() const {
 	if ( HasAllFlags( RF_ClassDefaultObject ) )

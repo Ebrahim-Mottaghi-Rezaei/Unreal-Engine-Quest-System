@@ -30,7 +30,7 @@ void UQuestComponent::UpdateQuestStatus(const TSubclassOf<UQuest> Quest, const E
 		return;
 	}
 
-	if ( FoundQuest->Status == EQuestStatus::Failed || FoundQuest->Status == EQuestStatus::Completed )
+	if ( FoundQuest->GetStatus() == EQuestStatus::Failed || FoundQuest->GetStatus() == EQuestStatus::Completed )
 		return;
 
 	FoundQuest->UpdateStatus( Status );
@@ -43,5 +43,5 @@ EQuestStatus UQuestComponent::GetQuestStatus(const FGuid& QuestId) const {
 	if ( FoundQuest == nullptr )
 		return EQuestStatus::NotStarted;
 
-	return FoundQuest->Status;
+	return FoundQuest->GetStatus();
 }

@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "QuestItemBase.h"
 #include "QuestTask/Components/QuestComponent.h"
 #include "QuestTask/DataTypes/Delegates.h"
 #include "QuestTask/DataTypes/Enums.h"
-#include "QuestTask/DataTypes/Structs.h"
 #include "Quest.generated.h"
 
+class UQuestCondition;
+
 UCLASS( Abstract, Blueprintable, EditInlineNew )
-class QUESTTASK_API UQuest : public UQuestItemBase {
+class QUESTTASK_API UQuest : public UObject {
 	GENERATED_BODY()
 
 public:
@@ -38,11 +38,43 @@ public:
 
 	virtual ~UQuest() override;
 
+protected:
+	UPROPERTY( BlueprintReadOnly/*, EditAnywhere*/ )
+	FGuid Id;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	FText Name;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	FText GameplayText;
+
+	UPROPERTY( EditAnywhere, BlueprintReadWrite )
+	UTexture2D* Icon;
+
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
 	EQuestStatus Status;
 
-	UPROPERTY( BlueprintReadWrite, EditAnywhere, meta=(editinlinenew, ShowInnerProperties, FullyExpand=true) )
-	TArray<FQuestCondition> CompleteConditions;
+	UPROPERTY( BlueprintReadWrite, EditAnywhere, Instanced, meta=(editinlinenew, ShowInnerProperties, FullyExpand=true) )
+	UQuestCondition* Condition;
+
+	UQuestComponent* GetQuestComponent() const;
+
+public:
+	FORCEINLINE FGuid GetId() const {
+		return Id;
+	}
+
+	FORCEINLINE FText GetItemName() const {
+		return Name;
+	}
+
+	FORCEINLINE FText GetGameplayText() const {
+		return GameplayText;
+	}
+
+	FORCEINLINE EQuestStatus GetStatus() const {
+		return Status;
+	}
 
 	UFUNCTION( BlueprintCallable, Category = "Quest" )
 	void UpdateStatus(EQuestStatus NewStatus);
@@ -51,12 +83,12 @@ protected:
 	UFUNCTION()
 	void OnQuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus);
 
-	UQuestComponent* RetrieveQuestComponent() const;
-
-	bool CheckIfConditionsMeet();
-
 	virtual UWorld* GetWorld() const override;
 
-	UPROPERTY()
+#if WITH_EDITOR
+	virtual void PostDuplicate(bool bDuplicateForPIE) override;
+#endif
+
+	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
 	TSoftObjectPtr<UQuestComponent> QuestComponent;
 };

@@ -14,7 +14,7 @@ FQuestInfo::FQuestInfo() {
 	Description = FText::FromString( "Description" );
 }
 
-FQuestCondition::FQuestCondition() {
+FHasItemsConditionInfo::FHasItemsConditionInfo() {
 	Item  = nullptr;
 	Count = 1;
 }

@@ -5,4 +5,6 @@
 AGameplayItem::AGameplayItem() {
 	PrimaryActorTick.bCanEverTick          = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
+
+	Item = nullptr;
 }

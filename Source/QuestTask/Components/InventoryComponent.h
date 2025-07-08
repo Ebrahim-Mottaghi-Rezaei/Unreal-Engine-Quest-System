@@ -7,7 +7,8 @@
 #include "QuestTask/DataTypes/Delegates.h"
 #include "InventoryComponent.generated.h"
 
-class UQuestItemBase;
+class UGameplayItemData;
+class UQuest;
 
 UCLASS( ClassGroup=(QuestTask), meta=(BlueprintSpawnableComponent) )
 class QUESTTASK_API UInventoryComponent : public UActorComponent {
@@ -19,10 +20,10 @@ public:
 protected:
 	UFUNCTION( BlueprintImplementableEvent, Category = "Events", DisplayName="ItemAdded" )
 	// ReSharper disable once CppUEBlueprintImplementableEventNotImplemented
-	void K2_ItemAdded(TSubclassOf<UQuestItemBase> Item);
+	void K2_ItemAdded(TSubclassOf<UQuest> Item);
 
 	UFUNCTION( BlueprintCallable )
-	FORCEINLINE void Notify_ItemAdded(TSubclassOf<UQuestItemBase> Item) {
+	FORCEINLINE void Notify_ItemAdded(TSubclassOf<UQuest> Item) {
 		OnItemAdded.Broadcast( Item );
 		K2_ItemAdded( Item );
 	}
@@ -37,10 +38,10 @@ public:
 protected:
 	UFUNCTION( BlueprintImplementableEvent, Category = "Events", DisplayName="ItemUpdated" )
 	// ReSharper disable once CppUEBlueprintImplementableEventNotImplemented
-	void K2_ItemUpdated(TSubclassOf<UQuestItemBase> Item, uint8 Count);
+	void K2_ItemUpdated(TSubclassOf<UQuest> Item, uint8 Count);
 
 	UFUNCTION( BlueprintCallable )
-	FORCEINLINE void Notify_ItemUpdated(TSubclassOf<UQuestItemBase> Item, uint8 Count) {
+	FORCEINLINE void Notify_ItemUpdated(TSubclassOf<UQuest> Item, uint8 Count) {
 		OnItemUpdated.Broadcast( Item, Count );
 		K2_ItemUpdated( Item, Count );
 	}
@@ -55,6 +56,10 @@ protected:
 	UPROPERTY( BlueprintReadOnly )
 	TMap<FGuid, uint8> Inventory;
 
+public:
 	UFUNCTION( BlueprintCallable )
-	void AddToInventory(TSubclassOf<UQuestItemBase> Item, int Count);
+	void AddToInventory(UGameplayItemData* Item, int Count);
+
+	UFUNCTION( BlueprintCallable )
+	uint8 GetItemCount(UGameplayItemData* Item) const;
 };

@@ -16,6 +16,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FQuestStatusUpdatedDelegate, UQues
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FQuestStatusChangedDelegate, EQuestStatus, NewStatus );
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FInventoryItemAddedDelegate, TSubclassOf<UQuestItemBase>, Item );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FInventoryItemAddedDelegate, TSubclassOf<UQuest>, Item );
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FInventoryItemUpdatedDelegate, TSubclassOf<UQuestItemBase>, Item, uint8, Count );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FInventoryItemUpdatedDelegate, TSubclassOf<UQuest>, Item, uint8, Count );

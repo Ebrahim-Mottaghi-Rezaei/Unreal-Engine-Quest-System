@@ -7,7 +7,7 @@
 #include "UObject/Object.h"
 #include "Structs.generated.h"
 
-class UQuestItemBase;
+class UGameplayItemData;
 
 USTRUCT( BlueprintType, Category = "DataTypes" )
 struct QUESTTASK_API FBaseStruct {
@@ -39,14 +39,14 @@ public:
 };
 
 USTRUCT( BlueprintType, Category = "DataTypes" )
-struct QUESTTASK_API FQuestCondition : public FBaseStruct {
+struct QUESTTASK_API FHasItemsConditionInfo : public FBaseStruct {
 	GENERATED_BODY()
 
 public:
-	FQuestCondition();
+	FHasItemsConditionInfo();
 
 	UPROPERTY( BlueprintReadWrite, EditAnywhere )
-	TSubclassOf<UQuestItemBase> Item;
+	UGameplayItemData* Item;
 	UPROPERTY( BlueprintReadWrite, EditAnywhere )
 	uint8 Count;
 };

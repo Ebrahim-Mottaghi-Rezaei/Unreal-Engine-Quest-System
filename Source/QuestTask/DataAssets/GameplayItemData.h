@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
-#include "QuestItemBase.generated.h"
+#include "Engine/DataAsset.h"
+#include "GameplayItemData.generated.h"
 
-UCLASS( Abstract, Blueprintable, EditInlineNew )
-class QUESTTASK_API UQuestItemBase : public UObject {
+UCLASS()
+class QUESTTASK_API UGameplayItemData : public UDataAsset {
 	GENERATED_BODY()
 
 public:
-	UQuestItemBase();
+	UGameplayItemData();
 
 protected:
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
