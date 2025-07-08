@@ -3,7 +3,7 @@
 #include "QuestTriggerBox.h"
 #include "QuestTask/Components/QuestComponent.h"
 #include "QuestTask/Gameplay/QuestSystem/Quest.h"
-#include "QuestTask/Interfaces/QuestInterface.h"
+#include "QuestTask/Gameplay/QuestSystem/Interfaces/QuestInterface.h"
 
 AQuestTriggerBox::AQuestTriggerBox() {
 	PrimaryActorTick.bCanEverTick          = false;

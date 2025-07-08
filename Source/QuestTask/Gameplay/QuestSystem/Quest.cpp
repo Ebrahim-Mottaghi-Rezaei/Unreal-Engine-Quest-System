@@ -3,7 +3,7 @@
 #include "Quest.h"
 #include "Kismet/GameplayStatics.h"
 #include "QuestTask/Components/QuestComponent.h"
-#include "QuestTask/Interfaces/QuestInterface.h"
+#include "QuestTask/Gameplay/QuestSystem/Interfaces/QuestInterface.h"
 
 UQuest::UQuest() {
 	Status = EQuestStatus::NotStarted;
