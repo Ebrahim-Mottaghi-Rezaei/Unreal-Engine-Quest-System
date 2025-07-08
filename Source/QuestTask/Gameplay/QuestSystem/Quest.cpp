@@ -10,12 +10,13 @@ UQuest::UQuest() {
 }
 
 UQuest::~UQuest() {
-	const auto QuestComponent = RetrieveQuestComponent();
-	if ( !IsValid( QuestComponent ) )
+	if ( !QuestComponent.IsValid() )
 		return;
 
 	if ( QuestComponent->OnQuestStatusChanged.IsAlreadyBound( this, &ThisClass::OnQuestStatusChanged ) )
 		QuestComponent->OnQuestStatusChanged.RemoveDynamic( this, &ThisClass::OnQuestStatusChanged );
+
+	QuestComponent.Reset();
 }
 
 void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
@@ -29,9 +30,8 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 			return;
 		}
 
-		const auto QuestComponent = RetrieveQuestComponent();
-		if ( !IsValid( QuestComponent ) )
-			return;
+		if ( !QuestComponent.IsValid() )
+			QuestComponent = RetrieveQuestComponent();
 
 		QuestComponent->OnQuestStatusChanged.AddDynamic( this, &ThisClass::OnQuestStatusChanged );
 	}
@@ -46,7 +46,7 @@ void UQuest::OnQuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus) {
 
 UQuestComponent* UQuest::RetrieveQuestComponent() const {
 	const auto World = GetWorld();
-	if ( World == nullptr ) {
+	if ( !IsValid( World ) ) {
 		UE_LOG( LogTemp, Warning, TEXT( "World is null" ) );
 		return nullptr;
 	}
@@ -61,8 +61,10 @@ UQuestComponent* UQuest::RetrieveQuestComponent() const {
 }
 
 bool UQuest::CheckIfConditionsMeet() {
-	const auto QuestComponent = RetrieveQuestComponent();
-	if ( !IsValid( QuestComponent ) )
+	if ( !QuestComponent.IsValid() )
+		QuestComponent = RetrieveQuestComponent();
+
+	if ( QuestComponent.IsValid() )
 		return false;
 
 	if ( CompleteConditions.Num() == 0 )

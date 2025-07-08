@@ -31,6 +31,7 @@ protected:
 public:
 	UPROPERTY( BlueprintCallable, BlueprintAssignable, Category="Event" )
 	FQuestStatusChangedDelegate OnStatusChanged;
+
 #pragma endregion
 
 	UQuest();
@@ -55,4 +56,7 @@ protected:
 	bool CheckIfConditionsMeet();
 
 	virtual UWorld* GetWorld() const override;
+
+	UPROPERTY()
+	TSoftObjectPtr<UQuestComponent> QuestComponent;
 };
