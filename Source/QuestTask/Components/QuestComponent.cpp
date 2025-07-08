@@ -8,10 +8,6 @@ UQuestComponent::UQuestComponent() {
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
-void UQuestComponent::BeginPlay() {
-	Super::BeginPlay();
-}
-
 void UQuestComponent::AddQuest(TSubclassOf<UQuest> Quest) {
 	const auto Id = Quest.GetDefaultObject()->GetId();
 	if ( !ActiveQuests.Contains( Id ) ) {

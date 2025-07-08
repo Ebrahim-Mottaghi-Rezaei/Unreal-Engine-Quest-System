@@ -56,8 +56,6 @@ protected:
 	UPROPERTY( BlueprintReadOnly )
 	TMap<FGuid, UQuest*> ActiveQuests;
 
-	virtual void BeginPlay() override;
-
 public:
 	UFUNCTION( BlueprintCallable )
 	void AddQuest(TSubclassOf<UQuest> Quest);

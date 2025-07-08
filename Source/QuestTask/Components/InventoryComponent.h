@@ -55,8 +55,6 @@ protected:
 	UPROPERTY( BlueprintReadOnly )
 	TMap<FGuid, uint8> Inventory;
 
-	virtual void BeginPlay() override;
-
 	UFUNCTION( BlueprintCallable )
 	void AddToInventory(TSubclassOf<UQuestItemBase> Item, int Count);
 };

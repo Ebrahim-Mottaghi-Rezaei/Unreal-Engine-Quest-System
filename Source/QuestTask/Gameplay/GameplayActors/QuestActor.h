@@ -18,6 +18,4 @@ public:
 protected:
 	UPROPERTY( BlueprintReadOnly, EditAnywhere )
 	TSubclassOf<UQuest> Quest;
-
-	virtual void BeginPlay() override;
 };

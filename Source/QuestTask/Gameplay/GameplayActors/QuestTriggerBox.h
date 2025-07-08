@@ -25,7 +25,5 @@ protected:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite, meta=(EditCondition="Action == EQuestTriggerVolumeAction::Update", EditConditionHides) )
 	EQuestStatus NewStatus;
 
-	virtual void BeginPlay() override;
-
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };

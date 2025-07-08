@@ -14,10 +14,6 @@ AQuestTriggerBox::AQuestTriggerBox() {
 	Quest     = nullptr;
 }
 
-void AQuestTriggerBox::BeginPlay() {
-	Super::BeginPlay();
-}
-
 void AQuestTriggerBox::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap( OtherActor );
 

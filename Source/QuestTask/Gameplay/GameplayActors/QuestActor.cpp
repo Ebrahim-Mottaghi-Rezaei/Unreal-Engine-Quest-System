@@ -8,7 +8,3 @@ AQuestActor::AQuestActor() {
 
 	Quest = nullptr;
 }
-
-void AQuestActor::BeginPlay() {
-	Super::BeginPlay();
-}

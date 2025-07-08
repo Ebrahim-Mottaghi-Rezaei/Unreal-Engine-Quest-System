@@ -8,10 +8,6 @@ UInventoryComponent::UInventoryComponent() {
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
-void UInventoryComponent::BeginPlay() {
-	Super::BeginPlay();
-}
-
 void UInventoryComponent::AddToInventory(TSubclassOf<UQuestItemBase> Item, int Count) {
 	const auto Id        = Item->GetDefaultObject<UQuestItemBase>()->GetId();
 	const auto FoundItem = Inventory.Find( Id );

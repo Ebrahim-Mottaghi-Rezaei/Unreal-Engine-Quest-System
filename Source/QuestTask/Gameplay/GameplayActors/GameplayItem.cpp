@@ -2,12 +2,7 @@
 
 #include "GameplayItem.h"
 
-// Sets default values
 AGameplayItem::AGameplayItem() {
 	PrimaryActorTick.bCanEverTick          = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
-}
-
-void AGameplayItem::BeginPlay() {
-	Super::BeginPlay();
 }

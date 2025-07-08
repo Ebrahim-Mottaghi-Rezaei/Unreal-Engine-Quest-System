@@ -19,5 +19,4 @@ protected:
 	UPROPERTY( BlueprintReadOnly, EditAnywhere, Instanced, meta=(editinlinenew) )
 	UQuestItemBase* Item;
 
-	virtual void BeginPlay() override;
 };
