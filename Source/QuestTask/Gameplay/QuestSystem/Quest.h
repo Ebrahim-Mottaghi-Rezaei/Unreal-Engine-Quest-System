@@ -21,12 +21,12 @@ public:
 protected:
 	UFUNCTION( BlueprintImplementableEvent, Category = "Events", DisplayName="StatusChanged" )
 	// ReSharper disable once CppUEBlueprintImplementableEventNotImplemented
-	void K2_StatusChanged(EQuestStatus NewStatus);
+	void K2_StatusChanged(UQuest* Quest, EQuestStatus NewStatus);
 
 	UFUNCTION( BlueprintCallable )
-	FORCEINLINE void Notify_StatusChanged(EQuestStatus NewStatus) {
-		OnStatusChanged.Broadcast( NewStatus );
-		K2_StatusChanged( NewStatus );
+	FORCEINLINE void Notify_StatusChanged(UQuest* Quest, EQuestStatus NewStatus) {
+		OnStatusChanged.Broadcast( Quest, NewStatus );
+		K2_StatusChanged( Quest, NewStatus );
 	}
 
 public:

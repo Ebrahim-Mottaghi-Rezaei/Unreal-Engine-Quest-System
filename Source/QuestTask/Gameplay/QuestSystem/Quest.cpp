@@ -36,7 +36,8 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 	if ( IsValid( Condition ) )
 		if ( NewStatus == EQuestStatus::Active ) {
 			if ( Condition->Evaluate_Implementation() ) {
-				Notify_StatusChanged( EQuestStatus::Completed );
+				Status = EQuestStatus::Completed;
+				Notify_StatusChanged( this, EQuestStatus::Completed );
 				return;
 			}
 
@@ -47,7 +48,7 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 		}
 
 	Status = NewStatus;
-	Notify_StatusChanged( Status );
+	Notify_StatusChanged( this, Status );
 }
 
 void UQuest::OnQuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus) {

@@ -47,7 +47,7 @@ protected:
 
 public:
 	UPROPERTY( BlueprintCallable, BlueprintAssignable, Category="Event" )
-	FQuestStatusUpdatedDelegate OnQuestStatusChanged;
+	FQuestStatusChangedDelegate OnQuestStatusChanged;
 #pragma endregion
 
 	UQuestComponent();
@@ -65,4 +65,8 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 	EQuestStatus GetQuestStatus(const FGuid& QuestId) const;
+
+protected:
+	UFUNCTION()
+	void QuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus);
 };

@@ -16,8 +16,8 @@ void UQuestComponent::AddQuest(TSubclassOf<UQuest> Quest) {
 
 		Notify_QuestAdded( NewQuest );
 
+		NewQuest->OnStatusChanged.AddDynamic( this, &ThisClass::QuestStatusChanged );
 		NewQuest->UpdateStatus( EQuestStatus::Active );
-		Notify_QuestStatusChanged( NewQuest, EQuestStatus::Active );
 	}
 }
 
@@ -44,4 +44,8 @@ EQuestStatus UQuestComponent::GetQuestStatus(const FGuid& QuestId) const {
 		return EQuestStatus::NotStarted;
 
 	return FoundQuest->GetStatus();
+}
+
+void UQuestComponent::QuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus) {
+	Notify_QuestStatusChanged( Quest, NewStatus );
 }

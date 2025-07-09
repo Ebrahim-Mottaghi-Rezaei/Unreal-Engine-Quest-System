@@ -33,7 +33,8 @@ void UInventoryBasedQuest::UpdateStatus(EQuestStatus NewStatus) {
 
 	if ( NewStatus == EQuestStatus::Active ) {
 		if ( Condition->Evaluate_Implementation() ) {
-			Notify_StatusChanged( EQuestStatus::Completed );
+			Status = EQuestStatus::Completed;
+			Notify_StatusChanged( this, EQuestStatus::Completed );
 			return;
 		}
 
@@ -45,7 +46,7 @@ void UInventoryBasedQuest::UpdateStatus(EQuestStatus NewStatus) {
 	}
 
 	Status = NewStatus;
-	Notify_StatusChanged( Status );
+	Notify_StatusChanged( this, Status );
 }
 
 bool UInventoryBasedQuest::CheckForRelevantItem(const UGameplayItemData* Item) const {
