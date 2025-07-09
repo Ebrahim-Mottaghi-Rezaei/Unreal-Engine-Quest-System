@@ -52,6 +52,10 @@ public:
 
 	UQuestComponent();
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	virtual void BeginDestroy() override;
+
 protected:
 	UPROPERTY( BlueprintReadOnly )
 	TMap<FGuid, UQuest*> ActiveQuests;
@@ -66,7 +70,11 @@ public:
 	UFUNCTION( BlueprintCallable )
 	EQuestStatus GetQuestStatus(const FGuid& QuestId) const;
 
+	void RemoveQuestStatusChangeBinding(UQuest* Quest);
+
 protected:
 	UFUNCTION()
 	void QuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus);
+
+	void CleanUp();
 };

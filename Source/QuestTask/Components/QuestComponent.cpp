@@ -8,6 +8,16 @@ UQuestComponent::UQuestComponent() {
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
+void UQuestComponent::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	CleanUp();
+	Super::EndPlay( EndPlayReason );
+}
+
+void UQuestComponent::BeginDestroy() {
+	CleanUp();
+	Super::BeginDestroy();
+}
+
 void UQuestComponent::AddQuest(TSubclassOf<UQuest> Quest) {
 	const auto Id = Quest.GetDefaultObject()->GetId();
 	if ( !ActiveQuests.Contains( Id ) ) {
@@ -46,6 +56,19 @@ EQuestStatus UQuestComponent::GetQuestStatus(const FGuid& QuestId) const {
 	return FoundQuest->GetStatus();
 }
 
+void UQuestComponent::RemoveQuestStatusChangeBinding(UQuest* Quest) {
+	if ( Quest->OnStatusChanged.IsAlreadyBound( this, &ThisClass::QuestStatusChanged ) )
+		Quest->OnStatusChanged.RemoveDynamic( this, &ThisClass::QuestStatusChanged );
+}
+
 void UQuestComponent::QuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus) {
+	if ( NewStatus == EQuestStatus::Failed || NewStatus == EQuestStatus::Completed )
+		RemoveQuestStatusChangeBinding( Quest );
+
 	Notify_QuestStatusChanged( Quest, NewStatus );
+}
+
+void UQuestComponent::CleanUp() {
+	for ( const auto ActiveQuest : ActiveQuests )
+		RemoveQuestStatusChangeBinding( ActiveQuest.Value );
 }
