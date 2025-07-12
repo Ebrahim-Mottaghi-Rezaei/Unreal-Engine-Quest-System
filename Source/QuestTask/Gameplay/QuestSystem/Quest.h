@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Tickable.h"
 #include "QuestTask/Components/QuestComponent.h"
 #include "QuestTask/DataTypes/Delegates.h"
 #include "QuestTask/DataTypes/Enums.h"
@@ -12,7 +13,7 @@ class UInventoryComponent;
 class UQuestCondition;
 
 UCLASS( Abstract, Blueprintable, EditInlineNew )
-class QUESTTASK_API UQuest : public UObject {
+class QUESTTASK_API UQuest : public UObject, public FTickableGameObject {
 	GENERATED_BODY()
 
 public:
@@ -57,6 +58,34 @@ protected:
 
 	UPROPERTY( BlueprintReadWrite, EditAnywhere, Instanced, meta=(editinlinenew, ShowInnerProperties, FullyExpand=true) )
 	UQuestCondition* Condition;
+
+	UPROPERTY( BlueprintReadOnly, EditDefaultsOnly )
+	bool bIsTickable;
+
+	// FTickableGameObject interface
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION( BlueprintImplementableEvent, Category = "Quest" )
+	void TickQuest(float DeltaTime);
+
+	virtual TStatId GetStatId() const override {
+		RETURN_QUICK_DECLARE_CYCLE_STAT( UQuest, STATGROUP_Tickables );
+	}
+
+	UFUNCTION( BlueprintCallable, Category = "Quest" )
+	void SetTickEnabled(bool bEnabled);
+
+	virtual bool IsTickable() const override {
+		return bIsTickable;
+	}
+
+	virtual bool IsTickableWhenPaused() const override {
+		return false;
+	}
+
+	virtual bool IsTickableInEditor() const override {
+		return false;
+	}
 
 	UQuestComponent* GetQuestComponent() const;
 

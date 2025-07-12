@@ -2,6 +2,8 @@
 
 #include "Quest.h"
 
+#include <filesystem>
+
 #include "Conditions/QuestCondition.h"
 #include "Kismet/GameplayStatics.h"
 #include "QuestTask/Components/QuestComponent.h"
@@ -10,11 +12,11 @@
 UQuest::UQuest() {
 	Status = EQuestStatus::NotStarted;
 
-	Id           = FGuid::NewGuid();
-	Name         = FText::FromString( TEXT( "Name" ) );
-	GameplayText = FText::FromString( TEXT( "Gameplay" ) );
-	Icon         = nullptr;
-
+	Id             = FGuid::NewGuid();
+	Name           = FText::FromString( TEXT( "Name" ) );
+	GameplayText   = FText::FromString( TEXT( "Gameplay" ) );
+	Icon           = nullptr;
+	bIsTickable    = false;
 	QuestComponent = nullptr;
 	Condition      = nullptr;
 }
@@ -35,12 +37,12 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 
 	if ( IsValid( Condition ) )
 		if ( NewStatus == EQuestStatus::Active ) {
-			if ( Condition->Evaluate_Implementation() ) {
-				Status = EQuestStatus::Completed;
-				Notify_StatusChanged( this, EQuestStatus::Completed );
+			Status = Condition->Evaluate_Implementation();
+
+			if ( Status == EQuestStatus::Completed || Status == EQuestStatus::Failed ) {
+				Notify_StatusChanged( this, Status );
 				return;
 			}
-
 			if ( !QuestComponent.IsValid() )
 				QuestComponent = GetQuestComponent();
 
@@ -54,8 +56,16 @@ void UQuest::UpdateStatus(const EQuestStatus NewStatus) {
 void UQuest::OnQuestStatusChanged(UQuest* Quest, EQuestStatus NewStatus) {
 	if ( NewStatus == EQuestStatus::Failed )
 		UpdateStatus( EQuestStatus::Failed );
-	else if ( Condition->Evaluate_Implementation() )
+	else if ( Condition->Evaluate_Implementation() == EQuestStatus::Completed )
 		UpdateStatus( EQuestStatus::Completed );
+}
+
+void UQuest::Tick(float DeltaTime) {
+	TickQuest( DeltaTime );
+}
+
+void UQuest::SetTickEnabled(bool bEnabled) {
+	bIsTickable = bEnabled;
 }
 
 UQuestComponent* UQuest::GetQuestComponent() const {
