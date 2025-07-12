@@ -32,7 +32,7 @@ void UInventoryBasedQuest::UpdateStatus(EQuestStatus NewStatus) {
 	}
 
 	if ( NewStatus == EQuestStatus::Active ) {
-		if ( Condition->Evaluate_Implementation() ) {
+		if ( Condition->Evaluate_Implementation() == EQuestStatus::Completed ) {
 			Status = EQuestStatus::Completed;
 			Notify_StatusChanged( this, EQuestStatus::Completed );
 			return;
@@ -61,13 +61,13 @@ bool UInventoryBasedQuest::CheckForRelevantItem(const UGameplayItemData* Item) c
 void UInventoryBasedQuest::OnItemAddedToInventory(UGameplayItemData* Item) {
 	bool bRelevantItemFound = CheckForRelevantItem( Item );
 
-	if ( bRelevantItemFound && Condition->Evaluate_Implementation() )
+	if ( bRelevantItemFound && Condition->Evaluate_Implementation() == EQuestStatus::Completed )
 		UpdateStatus( EQuestStatus::Completed );
 }
 
 void UInventoryBasedQuest::OnItemUpdatedInInventory(UGameplayItemData* Item, uint8 Count) {
 	bool bRelevantItemFound = CheckForRelevantItem( Item );
 
-	if ( bRelevantItemFound && Condition->Evaluate_Implementation() )
+	if ( bRelevantItemFound && Condition->Evaluate_Implementation() == EQuestStatus::Completed )
 		UpdateStatus( EQuestStatus::Completed );
 }

@@ -13,4 +13,3 @@ UENUM( BlueprintType )
 enum class EQuestTriggerVolumeAction : uint8 {
 	Add, Update
 };
-

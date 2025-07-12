@@ -8,22 +8,22 @@
 
 UHasItemsCondition::UHasItemsCondition() {}
 
-bool UHasItemsCondition::Evaluate_Implementation() {
+EQuestStatus UHasItemsCondition::Evaluate_Implementation() {
 	const auto PlayerController = UGameplayStatics::GetPlayerController( GetWorld(), 0 );
 	if ( !IsValid( PlayerController ) ) {
 		UE_LOG( LogTemp, Warning, TEXT("PlayerController is null.") );
-		return false;
+		return EQuestStatus::Failed;
 	}
 
 	const auto InventoryComponent = IQuestInterface::Execute_GetInventoryComponent( PlayerController );
 	if ( !IsValid( InventoryComponent ) ) {
 		UE_LOG( LogTemp, Warning, TEXT("InventoryComponent is null.") );
-		return false;
+		return EQuestStatus::Failed;
 	}
 
 	for ( const FHasItemsConditionInfo& RequiredItem : RequiredItems )
 		if ( InventoryComponent->GetItemCount( RequiredItem.Item ) < RequiredItem.Count )
-			return false;
+			return EQuestStatus::Failed;
 
-	return true;
+	return EQuestStatus::Completed;
 }

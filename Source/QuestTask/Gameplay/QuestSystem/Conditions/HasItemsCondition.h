@@ -25,5 +25,5 @@ public:
 		return RequiredItems;
 	}
 
-	virtual bool Evaluate_Implementation() override;
+	virtual EQuestStatus Evaluate_Implementation() override;
 };

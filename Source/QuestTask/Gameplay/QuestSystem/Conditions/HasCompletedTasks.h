@@ -19,5 +19,5 @@ protected:
 	UPROPERTY( EditAnywhere, BlueprintReadWrite )
 	TArray<TSubclassOf<UQuest>> RequiredQuests;
 
-	virtual bool Evaluate_Implementation() override;
+	virtual EQuestStatus Evaluate_Implementation() override;
 };

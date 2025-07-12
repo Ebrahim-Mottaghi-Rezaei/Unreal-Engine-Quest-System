@@ -21,6 +21,6 @@ UWorld* UQuestCondition::GetWorld() const {
 	return nullptr;
 }
 
-bool UQuestCondition::Evaluate_Implementation() {
-	return true;
+EQuestStatus UQuestCondition::Evaluate_Implementation() {
+	return EQuestStatus::Active;
 }

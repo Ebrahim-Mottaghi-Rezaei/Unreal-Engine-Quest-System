@@ -8,22 +8,46 @@
 
 UHasCompletedTasks::UHasCompletedTasks() {}
 
-bool UHasCompletedTasks::Evaluate_Implementation() {
+EQuestStatus UHasCompletedTasks::Evaluate_Implementation() {
 	const auto PlayerController = UGameplayStatics::GetPlayerController( GetWorld(), 0 );
 	if ( !IsValid( PlayerController ) ) {
 		UE_LOG( LogTemp, Warning, TEXT("PlayerController is null.") );
-		return false;
+		return EQuestStatus::Failed;
 	}
 
 	const auto QuestComponent = IQuestInterface::Execute_GetQuestComponent( PlayerController );
 	if ( !IsValid( QuestComponent ) ) {
 		UE_LOG( LogTemp, Warning, TEXT("InventoryComponent is null.") );
-		return false;
+		return EQuestStatus::Failed;
 	}
 
-	for ( const auto RequiredItem : RequiredQuests )
-		if ( QuestComponent->GetQuestStatus( RequiredItem.GetDefaultObject()->GetId() ) != EQuestStatus::Completed )
-			return false;
+	bool bNotStarted = true;
+	bool bCompleted  = true;
+	bool bFailed     = false;
+	for ( const auto RequiredItem : RequiredQuests ) {
+		const auto CurrentStatus = QuestComponent->GetQuestStatus( RequiredItem.GetDefaultObject()->GetId() );
 
-	return true;
+		switch ( CurrentStatus ) {
+			case EQuestStatus::NotStarted:
+			case EQuestStatus::Active:
+				bNotStarted = false;
+				bCompleted = false;
+				break;
+			case EQuestStatus::Failed:
+				bFailed = true;
+				break;
+			default: ;
+		}
+
+		if ( bFailed )
+			return EQuestStatus::Failed;
+	}
+
+	if ( bCompleted )
+		return EQuestStatus::Completed;
+
+	if ( bNotStarted ) {
+		return EQuestStatus::NotStarted;
+	}
+	return EQuestStatus::Active;
 }

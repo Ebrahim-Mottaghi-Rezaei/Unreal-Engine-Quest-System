@@ -9,7 +9,7 @@
 class UGameplayItemData;
 class UQuestItemBase;
 
-UCLASS()
+UCLASS( Blueprintable, BlueprintType )
 class QUESTTASK_API AGameplayItem : public AActor {
 	GENERATED_BODY()
 

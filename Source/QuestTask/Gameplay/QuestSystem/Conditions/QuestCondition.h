@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "QuestTask/DataTypes/Enums.h"
 #include "UObject/Object.h"
 #include "QuestCondition.generated.h"
 
@@ -17,7 +18,7 @@ public:
 
 protected:
 	UFUNCTION( BlueprintnativeEvent, Category = "QuestCondition" )
-	bool Evaluate();
+	EQuestStatus Evaluate();
 
 	virtual UWorld* GetWorld() const override;
 };
